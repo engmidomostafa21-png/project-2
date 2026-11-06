@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+
+
+class Student {
+    constructor(id, name, grades, attendance) {
+        this.id = id;
+        this.name = name;
+        this.grades = grades;
+        this.attendance = attendance;
+    }
+
+    calculateAverage() {
+        const total = this.grades.reduce((sum, grade) => sum + grade, 0);
+        return this.grades.length > 0 ? total / this.grades.length : 0;
+    }
+
+    getGrade() {
+        const average = this.calculateAverage();
+        if (average >= 90) return "A";
+        else if (average >= 80) return "B";
+        else if (average >= 70) return "C";
+        else if (average >= 60) return "D";
+        else if (average >= 50) return "E";
+        else return "F";
+    }
+
+    getFinalResult() {
+        const average = this.calculateAverage();
+        if (average >= 50 && this.attendance >= 75) {
+            return "ناجح";
+        } else {
+            return "يحتاج مراجعة";
+        }
+    }
+}
+
+const studentsList = [
+    new Student(101, "Medo", [90, 85, 95], 85),
+    new Student(102, "Mohamed", [45, 48, 42], 80),
+    new Student(103, "Nada", [70, 75, 80], 90),
+    new Student(104, "Olaa", [40, 45, 48], 70)
+];
+
+const strugglingStudents = studentsList.filter(student => {
+    const average = student.calculateAverage();
+    return average >= 40 && average <= 49;
+});
+
+const mercyStudents = strugglingStudents.map(student => {
+    const oldAvg = student.calculateAverage();
+    return {
+        id: student.id,
+        name: student.name,
+        oldAverage: oldAvg,
+        newAverage: oldAvg + 5
+    };
+});
+
+const totalNewAverages = mercyStudents.reduce((sum, student) => sum + student.newAverage, 0);
+
+const mercyAverage = mercyStudents.length > 0 ? totalNewAverages / mercyStudents.length : 0;
+
+console.log("=== STUDENTS REPORT ===");
+studentsList.forEach(student => {
+    console.log({
+        name: student.name,
+        average: student.calculateAverage().toFixed(2),
+        grade: student.getGrade(),
+        result: student.getFinalResult()
+    });
+});
+
+console.log("=== MERCY COMMITTEE ===");
+console.table(mercyStudents);
+
+console.log("=== MERCY AVERAGE ===");
+console.log(mercyAverage.toFixed(2));
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
